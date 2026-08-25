@@ -1,0 +1,20 @@
+type: GenericCrafter
+name: เครื่องปรับสภาพของเสีย
+description: ใช้หินปูนเป็นกลางกรดใช้แล้วจากเครื่องอิเล็กโทรไลซิส ได้น้ำกลับคืนพร้อมปุ๋ย
+size: 2
+health: 180
+craftTime: 75
+craftEffect: none
+outputItem: fertilizer/1
+outputLiquid: water/0.35
+consumes: {
+    items: [ limestone/1 ]
+    liquid: spent-acid/0.35
+    power: 0.0083333
+}
+requirements: [ steel/20, copper/10 ]
+category: crafting
+research: {
+    parent: electrolysis-plant
+    requirements: [ steel/60, cement/40 ]
+}

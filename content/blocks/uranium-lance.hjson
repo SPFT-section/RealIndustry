@@ -1,0 +1,30 @@
+type: ItemTurret
+name: ปืนเรลแกนยูเรเนียม
+description: ปืนเรลกันสุดทันสมัย ยิงลำแสงทะลุแนวศัตรูหลายเป้าด้วยยูเรเนียมเสริมสมรรถนะ
+size: 3
+health: 560
+reload: 115
+range: 335
+inaccuracy: 0
+rotateSpeed: 1.6
+recoil: 5
+shootCone: 10
+maxAmmo: 8
+targetAir: true
+ammoTypes: {
+    enriched-uranium: {
+        type: RailBulletType
+        damage: 125
+        width: 9
+        length: 340
+        pierceCap: 3
+        frontColor: "45e07a"
+        backColor: "1a5c38"
+    }
+}
+requirements: [ steel/120, aluminum/80, lead/60 ]
+category: turret
+research: {
+    parent: nuclear-reactor
+    requirements: [ enriched-uranium/50, steel/200 ]
+}

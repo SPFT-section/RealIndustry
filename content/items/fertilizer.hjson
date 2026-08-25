@@ -1,0 +1,9 @@
+name: ปุ๋ย
+description: ผลพลอยได้จากการปรับสภาพของเสีย ฟื้นฟูดินและสนับสนุนการเพาะปลูก
+color: "7cb342"
+hardness: 1
+cost: 1
+radioactivity: 0
+explosiveness: 0.1
+flammability: 0.3
+buildable: true

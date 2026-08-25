@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่แคสซิเทอไรต์
+description: แหล่งแร่ดีบุกแคสซิเทอไรต์
+itemDrop: cassiterite
+variants: 2

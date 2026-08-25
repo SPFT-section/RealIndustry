@@ -1,0 +1,33 @@
+type: ItemTurret
+name: ปืนฟลัคอะลูมิเนียม
+description: ปืนต่อต้านอากาศยานจากอะลูมิเนียม กระสุนระเบิดเมื่อเข้าใกล้เป้าหมาย ไม่ยิงเป้าบนพื้น
+size: 2
+health: 280
+reload: 12
+range: 190
+inaccuracy: 4
+rotateSpeed: 8
+recoil: 1.5
+maxAmmo: 40
+targetAir: true
+targetGround: false
+ammoTypes: {
+    aluminum: {
+        type: FlakBulletType
+        damage: 13
+        splashDamage: 11
+        splashRadius: 18
+        speed: 4.2
+        width: 6
+        height: 9
+        lifetime: 46
+        frontColor: "dfe5ea"
+        backColor: "7d8a94"
+    }
+}
+requirements: [ aluminum/70, steel/30 ]
+category: turret
+research: {
+    parent: electrolysis-plant
+    requirements: [ aluminum/120, steel/60 ]
+}

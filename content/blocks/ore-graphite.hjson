@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่กราไฟต์
+description: แหล่งกราไฟต์ธรรมชาติ เนื้อคาร์บอนบริสุทธิ์
+itemDrop: graphite
+variants: 2

@@ -1,0 +1,9 @@
+name: เฮมาไทต์
+description: แร่เหล็กออกไซด์ วัตถุดิบหลักของเตาถลุงเหล็กสำหรับผลิตเหล็กกล้า
+color: "8b4513"
+hardness: 4
+cost: 2
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true

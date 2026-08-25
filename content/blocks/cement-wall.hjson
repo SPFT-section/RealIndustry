@@ -1,0 +1,11 @@
+type: Wall
+name: กำแพงซีเมนต์
+description: กำแพงราคาถูกจากซีเมนต์ เหมาะสำหรับปิดล้อมพื้นที่เป็นจำนวนมาก
+size: 1
+health: 340
+requirements: [ cement/6 ]
+category: defense
+research: {
+    parent: cement-kiln
+    requirements: [ cement/40 ]
+}

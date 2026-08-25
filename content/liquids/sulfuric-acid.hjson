@@ -1,0 +1,9 @@
+name: กรดซัลฟิวริก
+description: กรดอุตสาหกรรมสำหรับกระบวนการทางเคมีขั้นสูง จัดการด้วยความระมัดระวัง
+color: "d9c25f"
+temperature: 0.6
+heatCapacity: 0.6
+viscosity: 0.4
+flammability: 0
+explosiveness: 0
+effect: none

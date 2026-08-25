@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่เบริล
+description: แหล่งแร่เบริล แข็งที่สุดในโมดูล
+itemDrop: beryl
+variants: 2

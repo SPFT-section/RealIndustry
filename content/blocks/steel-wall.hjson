@@ -1,0 +1,11 @@
+type: Wall
+name: กำแพงเหล็กกล้า
+description: กำแพงเหล็กกล้ามาตรฐานอุตสาหกรรม ทนทานและผลิตง่าย
+size: 1
+health: 640
+requirements: [ steel/6 ]
+category: defense
+research: {
+    parent: blast-furnace
+    requirements: [ steel/60 ]
+}

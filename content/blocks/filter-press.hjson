@@ -1,0 +1,18 @@
+type: GenericCrafter
+name: เครื่องอัดกากตะกอน
+description: อัดกากตะกอนจากเครื่องแปรรูปเคมีให้เป็นปุ๋ย เพิ่มมูลค่าให้ของเสียแทนการทิ้ง
+size: 2
+health: 180
+craftTime: 90
+craftEffect: none
+outputItem: fertilizer/1
+consumes: {
+    liquid: waste-sludge/0.2
+    power: 0.0166667
+}
+requirements: [ steel/25, copper/15 ]
+category: crafting
+research: {
+    parent: electrolysis-plant
+    requirements: [ steel/60 ]
+}

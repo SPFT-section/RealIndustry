@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่เฮมาไทต์
+description: แหล่งแร่เฮมาไทต์ฝังในหิน
+itemDrop: hematite
+variants: 2

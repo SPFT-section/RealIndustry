@@ -1,0 +1,28 @@
+type: UnitFactory
+name: โรงงานหุ่นรบ
+description: ประกอบหุ่นรบจากโลหะผสมของโมดูล เลือกผลิตครอว์เลอร์ วอสป์ หรือบรอว์เลอร์ได้
+size: 3
+health: 450
+plans: [
+    {
+        unit: bronze-crawler
+        requirements: [ bronze/8, copper/10 ]
+        time: 3600
+    }
+    {
+        unit: aluminum-wasp
+        requirements: [ aluminum/10, copper/8 ]
+        time: 4200
+    }
+    {
+        unit: steel-brawler
+        requirements: [ steel/14, bronze/8 ]
+        time: 5400
+    }
+]
+requirements: [ steel/80, bronze/60, copper/50 ]
+category: units
+research: {
+    parent: chemical-processor
+    requirements: [ steel/150, bronze/80 ]
+}

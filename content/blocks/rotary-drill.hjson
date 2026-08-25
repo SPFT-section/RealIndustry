@@ -1,0 +1,15 @@
+type: Drill
+name: เครื่องเจาะโรตารี
+description: เครื่องเจาะแร่อุตสาหกรรม ขุดได้แร่ทุกชนิดในโมดูล ใช้พลังงานไฟฟ้าต่ำ
+size: 2
+health: 120
+tier: 7
+drillTime: 350
+drawRim: false
+requirements: [ copper/30 ]
+category: production
+consumes: { power: 0.0083333 }
+research: {
+    root: true
+    requirements: [ copper/100 ]
+}

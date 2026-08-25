@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่กาเลนา
+description: แหล่งแร่ตะกั่วกาเลนา
+itemDrop: galena
+variants: 2

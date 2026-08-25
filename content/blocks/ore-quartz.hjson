@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่ควอตซ์
+description: แหล่งผลึกควอตซ์ แข็งมากต้องใช้เครื่องเจาะโรตารี
+itemDrop: quartz
+variants: 2

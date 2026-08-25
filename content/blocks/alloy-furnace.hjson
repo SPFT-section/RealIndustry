@@ -1,0 +1,18 @@
+type: GenericCrafter
+name: เตาหลอมโลหะผสม
+description: หลอมทองแดงกับแร่ดีบุกเป็นบรอนซ์ วัสดุเครื่องจักรยุคโลหะ
+size: 2
+health: 220
+craftTime: 150
+craftEffect: smeltsmoke
+outputItem: bronze/2
+consumes: {
+    items: [ copper/2, cassiterite/2 ]
+    power: 0.0333333
+}
+requirements: [ copper/30, steel/15 ]
+category: crafting
+research: {
+    parent: blast-furnace
+    requirements: [ steel/80 ]
+}

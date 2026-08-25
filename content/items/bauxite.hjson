@@ -1,0 +1,9 @@
+name: บอกไซต์
+description: แร่อะลูมิเนียม ต้องผ่านกระบวนการอิเล็กโทรไลซิสจึงจะได้โลหะบริสุทธิ์
+color: "d4a373"
+hardness: 2
+cost: 2
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true

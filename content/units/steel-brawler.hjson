@@ -1,0 +1,36 @@
+type: UnitType
+name: บรอว์เลอร์เหล็กกล้า
+description: หุ่นรบหนักจากเหล็กกล้า เกราะหนาพร้อมปืนใหญ่คู่ระเบิดแรง เป็นกำลังหลักภาคพื้นดิน
+type: mech
+flying: false
+health: 720
+armor: 6
+speed: 0.7
+hitSize: 10
+rotateSpeed: 2
+weapons: [
+    {
+        x: 3.5
+        y: 2
+        shootY: 5
+        reload: 46
+        rotate: true
+        mirror: true
+        shootSound: bang
+        bullet: {
+            damage: 26
+            splashDamage: 8
+            splashRadius: 12
+            speed: 3.2
+            width: 8
+            height: 12
+            lifetime: 42
+            frontColor: "c8d2dc"
+            backColor: "4a525c"
+        }
+    }
+]
+research: {
+    parent: unit-factory
+    requirements: [ steel/90 ]
+}

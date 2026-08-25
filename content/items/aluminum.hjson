@@ -1,0 +1,9 @@
+name: อะลูมิเนียม
+description: โลหะเบาจากการอิเล็กโทรไลซิสบอกไซต์ ใช้โครงสร้างขั้นสูง
+color: "dfe5ea"
+hardness: 1
+cost: 2
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true

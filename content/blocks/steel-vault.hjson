@@ -1,0 +1,12 @@
+type: StorageBlock
+name: ห้องนิรภัยเหล็กกล้า
+description: คลังสำรองขนาดใหญ่เสริมเหล็กกล้า เก็บทรัพยากรได้หลากหลายในพื้นที่เดียว
+size: 3
+health: 720
+itemCapacity: 1200
+requirements: [ steel/120, bronze/60, cement/40 ]
+category: effect
+research: {
+    parent: steel-container
+    requirements: [ steel/150, cement/60 ]
+}

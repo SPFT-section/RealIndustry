@@ -1,0 +1,12 @@
+type: Wall
+name: กำแพงอะลูมิเนียม
+description: กำแพงอะลูมิเนียมน้ำหนักเบา สะท้อนลำแสงพลังงานได้เป็นอย่างดี
+size: 1
+health: 560
+insulated: true
+requirements: [ aluminum/6 ]
+category: defense
+research: {
+    parent: electrolysis-plant
+    requirements: [ aluminum/80 ]
+}

@@ -1,0 +1,36 @@
+type: UnitType
+name: วอสป์อะลูมิเนียม
+description: หุ่นบินสอดแนมและโจมตีเบาจากอะลูมิเนียม รวดเร็วว่องไวพร้อมปืนกลคู่
+type: flying
+flying: true
+health: 150
+armor: 1
+speed: 1.9
+hitSize: 6
+rotateSpeed: 5
+engineSize: 2
+engineOffset: 5.5
+weapons: [
+    {
+        x: 4.5
+        y: 1
+        shootY: 4
+        reload: 20
+        rotate: true
+        mirror: true
+        shootSound: shoot
+        bullet: {
+            damage: 6
+            speed: 3.8
+            width: 4
+            height: 7
+            lifetime: 30
+            frontColor: "dfe5ea"
+            backColor: "707c86"
+        }
+    }
+]
+research: {
+    parent: unit-factory
+    requirements: [ aluminum/60 ]
+}

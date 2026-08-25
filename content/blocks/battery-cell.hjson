@@ -1,0 +1,14 @@
+type: Battery
+name: เซลล์แบตเตอรี่
+description: แบตเตอรี่ตะกั่ว-กรดเก็บไฟฟ้า 500 หน่วย สำรองพลังงานให้โรงงานช่วงไฟตก
+size: 1
+health: 100
+consumes: {
+    powerBuffered: 500
+}
+requirements: [ lead/30, copper/15 ]
+category: power
+research: {
+    parent: electrolysis-plant
+    requirements: [ steel/80, bronze/40 ]
+}

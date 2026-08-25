@@ -1,0 +1,19 @@
+type: GenericCrafter
+name: เตาถลุงทองแดง
+description: ถลุงแร่ชาลโคไพไรต์ให้เป็นทองแดงบริสุทธิ์ มีตะกรันเป็นของเสียเล็กน้อย
+size: 2
+health: 200
+craftTime: 120
+craftEffect: smeltsmoke
+outputItem: copper/1
+outputLiquid: slag/0.15
+consumes: {
+    items: [ chalcopyrite/2 ]
+    power: 0.025
+}
+requirements: [ copper/25 ]
+category: crafting
+research: {
+    parent: rotary-drill
+    requirements: [ copper/60 ]
+}

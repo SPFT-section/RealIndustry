@@ -1,0 +1,14 @@
+type: CoreBlock
+name: แกนฐานบาสเชียน
+description: แกนกลางอุตสาหกรรมของโมดูล จุดเริ่มต้นของอาณานิคมใหม่ เก็บทรัพยากรและเพิ่มวงเงินหุ่นรบ
+size: 3
+health: 3600
+itemCapacity: 3000
+unitCapModifier: 2
+unitType: alpha
+requirements: [ copper/250, cement/150, bronze/120 ]
+category: effect
+research: {
+    root: true
+    requirements: [ cement/100, bronze/80 ]
+}

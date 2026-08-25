@@ -1,0 +1,12 @@
+type: StorageBlock
+name: คอนเทนเนอร์เหล็กกล้า
+description: ตู้เก็บทรัพยากรเหล็กกล้าขนาดกะทัดรัด จัดระเบียบคลังโรงงาน
+size: 2
+health: 320
+itemCapacity: 400
+requirements: [ steel/40, bronze/20 ]
+category: effect
+research: {
+    parent: blast-furnace
+    requirements: [ steel/80 ]
+}

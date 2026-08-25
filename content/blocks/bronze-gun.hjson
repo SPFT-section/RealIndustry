@@ -1,0 +1,38 @@
+type: ItemTurret
+name: ปืนกลบรอนซ์
+description: ปืนกลยุคแรกจากบรอนซ์ ยิงได้ทั้งทางบกและทางอากาศ ใช้ทองแดงหรือบรอนซ์เป็นกระสุน
+size: 1
+health: 180
+reload: 18
+range: 150
+inaccuracy: 2.5
+rotateSpeed: 6
+recoil: 1
+maxAmmo: 30
+targetAir: true
+ammoTypes: {
+    copper: {
+        damage: 9
+        speed: 3.5
+        width: 6
+        height: 10
+        lifetime: 42
+        frontColor: "daa520"
+        backColor: "8a6a20"
+    }
+    bronze: {
+        damage: 15
+        speed: 4
+        width: 7
+        height: 11
+        lifetime: 44
+        frontColor: "cd7f32"
+        backColor: "7a4520"
+    }
+}
+requirements: [ copper/35, bronze/25 ]
+category: turret
+research: {
+    parent: alloy-furnace
+    requirements: [ bronze/40, copper/30 ]
+}

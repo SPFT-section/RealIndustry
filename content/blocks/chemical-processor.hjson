@@ -1,0 +1,19 @@
+type: GenericCrafter
+name: เครื่องแปรรูปเคมี
+description: เปลี่ยนควอตซ์เป็นซิลิกอนสำหรับทำชิป พร้อมกากตะกอนเป็นของเสียที่ต้องอัดกด
+size: 2
+health: 220
+craftTime: 180
+craftEffect: smeltsmoke
+outputItem: silicon/1
+outputLiquid: waste-sludge/0.2
+consumes: {
+    items: [ quartz/2, coal/1 ]
+    power: 0.05
+}
+requirements: [ steel/40, copper/20 ]
+category: crafting
+research: {
+    parent: blast-furnace
+    requirements: [ steel/120, bronze/60 ]
+}

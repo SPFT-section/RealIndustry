@@ -1,0 +1,9 @@
+name: กรดใช้แล้ว
+description: ของเสียจากเครื่องอิเล็กโทรไลซิส ต้องส่งไปปรับสภาพด้วยหินปูนที่เครื่องปรับสภาพของเสีย
+color: "b5722f"
+temperature: 0.55
+heatCapacity: 0.5
+viscosity: 0.55
+flammability: 0
+explosiveness: 0
+effect: none

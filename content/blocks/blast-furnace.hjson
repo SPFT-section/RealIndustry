@@ -1,0 +1,19 @@
+type: GenericCrafter
+name: เตาถลุงเหล็ก
+description: ถลุงแร่เฮมาไทต์ด้วยถ่านหินให้เป็นเหล็กกล้า พร้อมตะกรันเป็นของเสียที่ต้องรีไซเคิล
+size: 3
+health: 400
+craftTime: 300
+craftEffect: smeltsmoke
+outputItem: steel/2
+outputLiquid: slag/0.25
+consumes: {
+    items: [ hematite/3, coal/2 ]
+    power: 0.0333333
+}
+requirements: [ copper/40, graphite/20 ]
+category: crafting
+research: {
+    parent: copper-smelter
+    requirements: [ bronze/100, copper/60 ]
+}

@@ -1,0 +1,9 @@
+name: บรอนซ์
+description: โลหะผสมทองแดงกับดีบุก แข็งกว่าทองแดง ใช้ทำเครื่องจักรยุคต้น
+color: "cd7f32"
+hardness: 3
+cost: 2
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true

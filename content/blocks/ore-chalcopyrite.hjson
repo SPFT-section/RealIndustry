@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่ชาลโคไพไรต์
+description: แหล่งแร่ทองแดงชาลโคไพไรต์
+itemDrop: chalcopyrite
+variants: 2

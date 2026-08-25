@@ -1,0 +1,9 @@
+name: ควอตซ์
+description: ผลึกซิลิกา แหล่งซิลิกอนสำหรับผลิตชิปและวงจรอิเล็กทรอนิกส์
+color: "f5f5dc"
+hardness: 7
+cost: 2
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true

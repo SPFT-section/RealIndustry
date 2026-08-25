@@ -1,0 +1,16 @@
+type: NuclearReactor
+name: เตาปฏิกรณ์นิวเคลียร์
+description: ปฏิกรณ์ฟิชชันที่ใช้ยูเรเนียมเสริมสมรรถนะผลิตไฟฟ้า 20 หน่วยต่อวินาที ออกแบบเสถียรภาพสูงไม่มีการหลอมละลาย
+size: 3
+health: 800
+powerProduction: 0.3333333
+itemDuration: 7200
+heating: 0
+fuelItem: enriched-uranium
+lightColor: "50c878"
+requirements: [ steel/100, lead/50 ]
+category: power
+research: {
+    parent: centrifuge
+    requirements: [ enriched-uranium/40, steel/250 ]
+}

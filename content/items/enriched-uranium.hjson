@@ -1,0 +1,9 @@
+name: ยูเรเนียมเสริมสมรรถนะ
+description: เชื้อเพลิงนิวเคลียร์จากการเหวี่ยงแยกยูเรไนนิต ใช้ในเตาปฏิกรณ์นิวเคลียร์
+color: "45e07a"
+hardness: 2
+cost: 5
+radioactivity: 0.8
+explosiveness: 0.2
+flammability: 0
+buildable: true

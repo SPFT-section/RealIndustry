@@ -1,0 +1,18 @@
+type: GenericCrafter
+name: เครื่องเหวี่ยง
+description: เหวี่ยงแยกยูเรไนนิตเพื่อเสริมสมรรถนะเป็นเชื้อเพลิงนิวเคลียร์ ขั้นตอนก่อนเข้าปฏิกรณ์
+size: 3
+health: 320
+craftTime: 360
+craftEffect: smeltsmoke
+outputItem: enriched-uranium/1
+consumes: {
+    items: [ uraninite/5 ]
+    power: 0.0666667
+}
+requirements: [ steel/60, titanium/20 ]
+category: crafting
+research: {
+    parent: chemical-processor
+    requirements: [ steel/200, aluminum/100 ]
+}

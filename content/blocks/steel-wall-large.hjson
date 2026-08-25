@@ -1,0 +1,11 @@
+type: Wall
+name: กำแพงเหล็กกล้าขนาดใหญ่
+description: กำแพงเหล็กกล้าขนาด 2x2 สำหรับป้องกันแนวหนัก
+size: 2
+health: 2560
+requirements: [ steel/24 ]
+category: defense
+research: {
+    parent: steel-wall
+    requirements: [ steel/120 ]
+}

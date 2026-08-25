@@ -1,0 +1,14 @@
+type: CoreBlock
+name: แกนป้อมปราการซิทาเดล
+description: แกนกลางขั้นสูงจากยุคอะตอม โครงสร้างเสริมยูเรเนียม เก็บทรัพยากรจำนวนมากและเพิ่มวงเงินหุ่นรบสูงสุด
+size: 4
+health: 9000
+itemCapacity: 6000
+unitCapModifier: 6
+unitType: alpha
+requirements: [ steel/500, aluminum/400, enriched-uranium/100 ]
+category: effect
+research: {
+    parent: nuclear-reactor
+    requirements: [ enriched-uranium/80, aluminum/250 ]
+}

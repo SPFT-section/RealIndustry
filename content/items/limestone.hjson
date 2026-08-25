@@ -1,0 +1,9 @@
+name: หินปูน
+description: วัตถุดิบแคลเซียม ใช้ปรับสภาพกรดในเครื่องปรับสภาพของเสียและผลิตซีเมนต์
+color: "e8d5b7"
+hardness: 2
+cost: 1
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true

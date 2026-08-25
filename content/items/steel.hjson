@@ -1,0 +1,9 @@
+name: เหล็กกล้า
+description: โลหะโครงสร้างหลักจากเตาถลุงเหล็ก แข็งแรงทนทานกว่าทองแดง
+color: "8f9aa6"
+hardness: 3
+cost: 3
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true

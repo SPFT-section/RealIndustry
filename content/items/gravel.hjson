@@ -1,0 +1,10 @@
+name: กรวด
+description: วัสดุจากการรีไซเคิลตะกรัน ใช้เป็นวัสดุก่อสร้างพื้นฐานและกำแพง
+color: "9d968a"
+hardness: 1
+cost: 1
+radioactivity: 0
+explosiveness: 0
+flammability: 0
+buildable: true
+healthScaling: 0.5

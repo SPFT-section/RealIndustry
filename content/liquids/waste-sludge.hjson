@@ -1,0 +1,9 @@
+name: กากตะกอน
+description: ของเสียจากเครื่องแปรรูปเคมี ส่งไปกดอัดเป็นปุ๋ยที่เครื่องอัดกากตะกอน
+color: "5f6136"
+temperature: 0.5
+heatCapacity: 0.45
+viscosity: 0.8
+flammability: 0
+explosiveness: 0
+effect: none

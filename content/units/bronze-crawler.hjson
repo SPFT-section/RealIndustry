@@ -1,0 +1,34 @@
+type: UnitType
+name: ครอว์เลอร์บรอนซ์
+description: หุ่นรบพื้นฐานขนาดเล็กจากบรอนซ์ ผลิตเร็วใช้ประโยชน์จากจำนวนมาก
+type: mech
+flying: false
+health: 220
+armor: 2
+speed: 0.95
+hitSize: 7
+rotateSpeed: 3
+weapons: [
+    {
+        x: 0
+        y: 1
+        shootY: 5
+        reload: 26
+        rotate: true
+        mirror: false
+        shootSound: bang
+        bullet: {
+            damage: 9
+            speed: 3
+            width: 5
+            height: 8
+            lifetime: 36
+            frontColor: "cd7f32"
+            backColor: "6e4218"
+        }
+    }
+]
+research: {
+    parent: unit-factory
+    requirements: [ bronze/50 ]
+}

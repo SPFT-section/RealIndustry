@@ -1,0 +1,16 @@
+type: ConsumeGenerator
+name: โรงไฟฟ้าถ่านหิน
+description: เผาถ่านหินผลิตไฟฟ้าพื้นฐาน 5 หน่วยต่อวินาที แหล่งพลังงานแรกของโรงงาน
+size: 2
+health: 160
+powerProduction: 0.0833333
+itemDuration: 240
+consumes: {
+    item: coal
+}
+requirements: [ copper/30, steel/20 ]
+category: power
+research: {
+    parent: copper-smelter
+    requirements: [ copper/80, bronze/40 ]
+}

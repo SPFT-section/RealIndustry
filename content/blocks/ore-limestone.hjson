@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่หินปูน
+description: แหล่งหินปูน วัตถุดิบสำคัญของระบบจัดการของเสีย
+itemDrop: limestone
+variants: 2

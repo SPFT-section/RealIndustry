@@ -1,0 +1,19 @@
+type: GenericCrafter
+name: เครื่องกลั่นทรัพยากร
+description: หัวใจของห่วงโซ่ทรัพยากร กลั่นเบริลและกรวดด้วยกรดซัลฟิวริกให้เป็นโลหะผสมซอร์จคุณภาพสูง
+size: 3
+health: 420
+craftTime: 240
+craftEffect: smeltsmoke
+outputItem: surge-alloy/2
+consumes: {
+    items: [ beryl/3, gravel/2 ]
+    liquids: [ sulfuric-acid/0.25 ]
+    power: 0.1
+}
+requirements: [ steel/100, aluminum/60, bronze/40 ]
+category: crafting
+research: {
+    parent: chemical-processor
+    requirements: [ steel/180, aluminum/100 ]
+}

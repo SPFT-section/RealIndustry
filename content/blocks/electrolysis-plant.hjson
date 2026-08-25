@@ -1,0 +1,19 @@
+type: GenericCrafter
+name: เครื่องอิเล็กโทรไลซิส
+description: แยกบอกไซต์ด้วยกระแสไฟฟ้าตามกระบวนการ Hall-Héroult ได้อะลูมิเนียมพร้อมกรดใช้แล้วเป็นของเสีย
+size: 2
+health: 240
+craftTime: 300
+craftEffect: smeltsmoke
+outputItem: aluminum/1
+outputLiquid: spent-acid/0.35
+consumes: {
+    items: [ bauxite/4, graphite/1 ]
+    power: 0.1
+}
+requirements: [ steel/50, copper/30 ]
+category: crafting
+research: {
+    parent: blast-furnace
+    requirements: [ steel/150, bronze/80 ]
+}

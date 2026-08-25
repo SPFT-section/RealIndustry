@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่บอกไซต์
+description: แหล่งแร่บอกไซต์ฝังในดิน
+itemDrop: bauxite
+variants: 2

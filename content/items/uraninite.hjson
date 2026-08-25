@@ -1,0 +1,9 @@
+name: ยูเรไนนิต
+description: แร่ยูเรเนียมกัมมันตรังสี ต้องเสริมสมรรถนะในเครื่องเหวี่ยงก่อนใช้เป็นเชื้อเพลิงนิวเคลียร์
+color: "50c878"
+hardness: 5
+cost: 4
+radioactivity: 0.4
+explosiveness: 0
+flammability: 0
+buildable: true

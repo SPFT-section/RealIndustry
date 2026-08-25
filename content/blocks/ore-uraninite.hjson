@@ -1,0 +1,5 @@
+type: OreBlock
+name: แร่ยูเรไนนิต
+description: แหล่งแร่ยูเรเนียมกัมมันตรังสี เข้าใกล้อย่างระมัดระวัง
+itemDrop: uraninite
+variants: 2

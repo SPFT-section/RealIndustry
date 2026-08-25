@@ -1,0 +1,18 @@
+type: GenericCrafter
+name: เครื่องรีไซเคิล
+description: บดตะกรันจากเตาถลุงให้เป็นกรวดก่อสร้าง ลดขยะเพิ่มทรัพยากร
+size: 2
+health: 200
+craftTime: 135
+craftEffect: pulverize
+outputItem: gravel/2
+consumes: {
+    liquid: slag/0.3
+    power: 0.0166667
+}
+requirements: [ steel/30, copper/20 ]
+category: crafting
+research: {
+    parent: blast-furnace
+    requirements: [ steel/70, gravel/40 ]
+}

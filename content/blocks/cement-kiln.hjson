@@ -1,0 +1,18 @@
+type: GenericCrafter
+name: เตาเผาซีเมนต์
+description: เผาหินปูนด้วยถ่านหินตามกระบวนการเผาจริง ได้ซีเมนต์สำหรับก่อสร้าง
+size: 2
+health: 200
+craftTime: 150
+craftEffect: smeltsmoke
+outputItem: cement/2
+consumes: {
+    items: [ limestone/2, coal/1 ]
+    power: 0.0333333
+}
+requirements: [ steel/40, copper/25 ]
+category: crafting
+research: {
+    parent: blast-furnace
+    requirements: [ steel/60, bronze/40 ]
+}

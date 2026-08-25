@@ -1,0 +1,12 @@
+type: Unloader
+name: เครื่องจ่ายเสบียง
+description: เครื่องถ่ายเสบียงความเร็วสูงจากอะลูมิเนียม ดึงไอเทมจากคลังข้างเคียงเร็วกว่าปกติ
+size: 1
+health: 120
+speed: 2
+requirements: [ aluminum/20, steel/15, copper/10 ]
+category: effect
+research: {
+    parent: electrolysis-plant
+    requirements: [ aluminum/60 ]
+}
