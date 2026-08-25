@@ -5,11 +5,12 @@ from PIL import Image, ImageDraw
 
 ROOT = "/root/RealIndustry/sprites"
 S = 32
+VAN = "/tmp/opencode/vanilla"
 
 MET_L = (176, 184, 192, 255)
 MET_M = (152, 152, 160, 255)
 MET_D = (104, 112, 128, 255)
-FRAME = (72, 72, 80, 255)
+MET_F = (72, 74, 84, 255)
 
 
 def hx(h):
@@ -19,13 +20,13 @@ def hx(h):
 
 def shade(c, f):
     if f >= 1:
-        t = min(1.0, (f - 1))
-        return tuple(min(255, int(v + (255 - v) * t * 0.9)) for v in c[:3]) + (255,)
+        t = min(1.0, f - 1)
+        return tuple(min(255, int(v + (255 - v) * t * 0.85)) for v in c[:3]) + (255,)
     return tuple(int(v * f) for v in c[:3]) + (255,)
 
 
 def tri(c):
-    return [shade(c, 1.28), c, shade(c, 0.68)]
+    return [shade(c, 1.3), c, shade(c, 0.66)]
 
 
 def img_new(w=S, h=S):
@@ -47,32 +48,47 @@ def ell(d, box, fill, line=None, lw=1):
     d.ellipse(box, fill=fill, outline=line, width=lw)
 
 
-def bevel_rect(d, x0, y0, x1, y1, L, M, D, edge=2):
-    rect(d, [x0, y0, x1, y1], M)
-    d.line([x0, y0, x1, y0], fill=L, width=edge)
-    d.line([x0, y0, x0, y1], fill=L, width=edge)
-    d.line([x0, y1 - edge + 1, x1, y1 - edge + 1], fill=D, width=edge)
-    d.line([x1 - edge + 1, y0, x1 - edge + 1, y1], fill=D, width=edge)
+def oct(d, cx, cy, r, rot=22, fill=MET_F, line=None):
+    pts = [(cx + r * math.cos(math.radians(rot + i * 45)),
+            cy + r * math.sin(math.radians(rot + i * 45))) for i in range(8)]
+    poly(d, pts, fill, line=line)
+
+
+def plate(w, L=MET_L, M=MET_M, D=MET_D):
+    img = img_new(w, w)
+    d = ImageDraw.Draw(img)
+    rect(d, [0, 0, w - 1, w - 1], M)
+    e = max(2, w // 16)
+    d.line([0, 0, w - 1, 0], fill=L, width=e)
+    d.line([0, 0, 0, w - 1], fill=L, width=e)
+    d.line([0, w - e, w - 1, w - e], fill=D, width=e)
+    d.line([w - e, 0, w - e, w - 1], fill=D, width=e)
+    return img, d
+
+
+def claws(d, w, u, color=MET_F):
+    s = int(w * u)
+    c = s
+    for sx, sy in [(0, 0), (1, 0), (0, 1), (1, 1)]:
+        x = 0 if sx == 0 else w - c
+        y = 0 if sy == 0 else w - c
+        rect(d, [x, y, x + c, y + c], color)
+        pass
 
 
 ITEMS = {
-    "bauxite": ("lump", "d4a373"),
-    "hematite": ("lump", "9c5630"),
-    "chalcopyrite": ("lump", "daa520"),
-    "cassiterite": ("lump", "b8b8bc"),
-    "galena": ("lump", "708090"),
-    "uraninite": ("crystal", "50c878"),
-    "quartz": ("crystal", "e8e4d8"),
-    "beryl": ("crystal", "7cc87c"),
-    "limestone": ("lump", "d8cba8"),
-    "aluminum": ("ingot", "ccd4dc"),
-    "steel": ("ingot", "8f9aa6"),
-    "bronze": ("ingot", "cd7f32"),
-    "enriched-uranium": ("ingot", "45e07a"),
-    "gravel": ("pebbles", "9d968a"),
-    "cement": ("sack", "b8b4ac"),
-    "fertilizer": ("sack", "7cb342"),
+    "bauxite": ("lump", "d4a373"), "hematite": ("lump", "9c5630"),
+    "chalcopyrite": ("lump", "daa520"), "cassiterite": ("lump", "b0b0b6"),
+    "galena": ("lump", "708090"), "limestone": ("lump", "d8cba8"),
+    "uraninite": ("crystal", "50c878"), "quartz": ("crystal", "e8e4d8"),
+    "beryl": ("crystal", "7cc87c"), "aluminum": ("ingot", "ccd4dc"),
+    "steel": ("ingot", "8f9aa6"), "bronze": ("ingot", "cd7f32"),
+    "enriched-uranium": ("alloy", "45e07a"), "gravel": ("chunks", "9d968a"),
+    "cement": ("sack", "b8b4ac"), "fertilizer": ("sack", "7cb342"),
 }
+
+LIQUIDS = {"sulfuric-acid": "d9c25f", "spent-acid": "b5722f",
+           "waste-sludge": "6a6c40"}
 
 
 def item_lump(seed, hexs):
@@ -82,21 +98,13 @@ def item_lump(seed, hexs):
     d = ImageDraw.Draw(img)
     cx = cy = 16
     r0 = 11
-    pts = []
-    for i in range(7):
-        a = 2 * math.pi * i / 7 + rng.uniform(-0.15, 0.15)
-        r = r0 * rng.uniform(0.82, 1.02)
-        pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    pts = [(cx + r0 * math.cos(2 * math.pi * i / 6 + rng.uniform(-0.2, 0.2)) * rng.uniform(0.85, 1.05),
+            cy + r0 * math.sin(2 * math.pi * i / 6 + rng.uniform(-0.2, 0.2)) * rng.uniform(0.85, 1.05))
+           for i in range(6)]
     poly(d, pts, M, line=D, lw=1)
-    top = [(x, y) for x, y in pts if y < cy - 2]
-    if len(top) >= 3:
-        poly(d, top, L)
-    bot = [(x, y) for x, y in pts if y > cy + 4]
-    if len(bot) >= 3:
-        poly(d, bot, D)
+    poly(d, [pts[4], pts[5], pts[0], (cx, cy)], L, line=None, lw=0)
+    poly(d, [pts[1], pts[2], pts[3], (cx, cy)], D, line=None, lw=0)
     d.line(pts + [pts[0]], fill=D, width=1)
-    d.line([pts[1][0], pts[1][1] + 1, pts[2][0], pts[2][1] + 1],
-           fill=shade(L, 1.15), width=1)
     return img
 
 
@@ -104,16 +112,12 @@ def item_crystal(seed, hexs):
     L, M, D = tri(hx(hexs))
     img = img_new()
     d = ImageDraw.Draw(img)
-    shards = [
-        [(7, 27), (6, 13), (10, 5), (14, 14), (13, 27)],
-        [(13, 26), (14, 6), (19, 3), (22, 13), (21, 26)],
-        [(20, 27), (23, 12), (26, 10), (26, 21), (24, 27)],
-    ]
-    for i, sp in enumerate(shards):
-        c = [M, L, shade(M, 0.85)][i]
+    for i, sp in enumerate([[(7, 27), (6, 13), (10, 5), (14, 14), (13, 27)],
+                            [(13, 26), (14, 6), (19, 3), (22, 13), (21, 26)],
+                            [(20, 27), (23, 12), (26, 10), (26, 21), (24, 27)]]):
+        c = [M, L, shade(M, 0.82)][i]
         poly(d, sp, c, line=D, lw=1)
-        mid = sp[2]
-        d.line([sp[1], mid], fill=L if i != 1 else shade(L, 1.25), width=1)
+        d.line([sp[1], sp[2]], fill=shade(L, 1.2) if i == 1 else L, width=1)
     return img
 
 
@@ -126,23 +130,35 @@ def item_ingot(hexs):
     for i, (fx, fy) in enumerate([(9, 18), (14, 15), (19, 16)]):
         d.line([(fx, fy + 3), (fx + 4, fy)], fill=L if i % 2 == 0 else shade(M, 1.12),
                width=2)
-    poly(d, [(5, 21), (17, 26), (17, 29), (5, 24)], D, line=D, lw=1)
+    poly(d, [(5, 21), (17, 26), (17, 29), (5, 24)], D)
     d.line([(5, 21), (16, 12)], fill=L, width=1)
-    d.line([(17, 26), (28, 17)], fill=shade(D, 0.92), width=1)
     return img
 
 
-def item_pebbles(seed, hexs):
+def item_alloy(hexs):
+    L, M, D = tri(hx(hexs))
+    img = img_new()
+    d = ImageDraw.Draw(img)
+    rect(d, [7, 7, 25, 25], M, line=D, lw=1, r=3)
+    for i in range(3):
+        off = 9 + i * 5
+        d.line([off, 24, off + 6, 12], fill=L if i % 2 == 0 else shade(M, 1.14),
+               width=2)
+    d.line([8, 8, 24, 8], fill=L, width=1)
+    return img
+
+
+def item_chunks(seed, hexs):
     L, M, D = tri(hx(hexs))
     rng = random.Random(seed)
     img = img_new()
     d = ImageDraw.Draw(img)
-    for i, (x, y, r) in enumerate(sorted([(9, 21, 6), (19, 23, 7), (13, 14, 5),
-                                          (23, 15, 5)], key=lambda p: p[1])):
-        c = [M, L, shade(M, 0.88), shade(M, 1.08)][i % 4]
-        d.ellipse([x - r, y - r // 2, x + r, y + r // 2 + 1], fill=c, outline=D, width=1)
-        d.arc([x - r + 1, y - r // 2 + 1, x + r - 1, y + r // 2], 200, 320,
-              fill=shade(c, 1.2), width=1)
+    for x, y, s in [(8, 22, 5), (18, 23, 6), (14, 13, 5), (23, 13, 4)]:
+        pts = [(x - s, y + s * 0.6), (x - s * 0.6, y - s * 0.7),
+               (x + s * 0.5, y - s), (x + s, y + s * 0.5), (x + s * 0.2, y + s)]
+        pts = [(px + rng.uniform(-1, 1), py + rng.uniform(-1, 1)) for px, py in pts]
+        poly(d, pts, M, line=D, lw=1)
+        poly(d, [pts[1], pts[2], pts[3]], L, line=None, lw=0)
     return img
 
 
@@ -156,10 +172,6 @@ def item_sack(hexs):
     d.line([(7, 22), (25, 22)], fill=D, width=1)
     d.line([(10, 13), (12, 26)], fill=L, width=2)
     return img
-
-
-LIQUIDS = {"sulfuric-acid": "d9c25f", "spent-acid": "b5722f",
-           "waste-sludge": "6a6c40"}
 
 
 def liquid_icon(hexs):
@@ -176,12 +188,12 @@ def liquid_icon(hexs):
 
 
 BLOCK_ACCENTS = {
-    "rotary-drill": "cd7f32", "copper-smelter": "daa520", "blast-furnace": "ff8f3d",
+    "rotary-drill": "cd7f32", "copper-smelter": "e8a85c", "blast-furnace": "ff8f3d",
     "alloy-furnace": "cd7f32", "electrolysis-plant": "5cd8e8",
     "chemical-processor": "8fce4e", "centrifuge": "50c878",
-    "nuclear-reactor": "54e08a", "coal-generator": "ffb35c",
+    "nuclear-reactor": "b088f0", "coal-generator": "ffb35c",
     "battery-cell": "ffd54f", "recycler": "9ccc65", "neutralizer": "8fc6f0",
-    "filter-press": "a5d86a", "cement-kiln": "e8d0a0", "unit-factory": "ffd37f",
+    "filter-press": "a5d86a", "cement-kiln": "e8a05c", "unit-factory": "ffd37f",
     "acid-plant": "e8cf52", "resource-refinery": "45e07a",
     "steel-container": "9898a0", "steel-vault": "9898a0",
     "supply-unloader": "5cd8e8",
@@ -193,12 +205,13 @@ MACHINE_SIZES = {
     "nuclear-reactor": 3, "coal-generator": 2, "battery-cell": 1, "recycler": 2,
     "neutralizer": 2, "filter-press": 2, "cement-kiln": 2, "unit-factory": 3,
     "acid-plant": 2, "resource-refinery": 3,
+    "steel-container": 2, "steel-vault": 3, "supply-unloader": 1,
 }
 
-TURRET_SIZES = {"bronze-gun": 1, "steel-howitzer": 2, "aluminum-flak": 2,
-                "uranium-lance": 4}
-TURRET_HUE = {"bronze-gun": "cd7f32", "steel-howitzer": "9aa6b2",
-              "aluminum-flak": "cdd5dc", "uranium-lance": "45e07a"}
+TURRET_CANVAS = {"bronze-gun": 32, "steel-howitzer": 64, "aluminum-flak": 64,
+                 "uranium-lance": 128}
+TURRET_HUE = {"bronze-gun": "c08858", "steel-howitzer": "8a96a4",
+              "aluminum-flak": "c8d0d8", "uranium-lance": "45b878"}
 
 WALLS = {"cement-wall": "c8c0ac", "bronze-wall": "c08858", "steel-wall": "98a0aa",
          "steel-wall-large": "98a0aa", "aluminum-wall": "ccd4dc"}
@@ -206,160 +219,156 @@ WALL_SIZES = {"cement-wall": 1, "bronze-wall": 1, "steel-wall": 1,
               "steel-wall-large": 2, "aluminum-wall": 1}
 
 UNITS = {
-    "bronze-crawler": {"size": 48, "accent": "f8a05c", "legs": True},
+    "bronze-crawler": {"size": 48, "accent": "b088f0", "legs": True},
     "aluminum-wasp": {"size": 48, "accent": "5cd8e8", "legs": False},
     "steel-brawler": {"size": 48, "accent": "f8a05c", "legs": True},
 }
 
 
-def machine_plate(w):
-    img = img_new(w, w)
-    d = ImageDraw.Draw(img)
-    bevel_rect(d, 1, 1, w - 1, w - 1, MET_L, MET_M, MET_D)
-    return img, d
-
-
-def claw_corners(d, w, inset, size, color=FRAME):
-    for cx, cy in [(inset, inset), (w - inset, inset), (inset, w - inset),
-                   (w - inset, w - inset)]:
-        sx = 1 if cx < w / 2 else -1
-        sy = 1 if cy < w / 2 else -1
-        rect(d, [min(cx, cx + sx * size), min(cy, cy + sy * size),
-                 max(cx, cx + sx * size), max(cy, cy + sy * size)], color)
-
-
-def draw_machine(name, size):
+def bp_smelter(name, size):
     w = size * S
     ac = hx(BLOCK_ACCENTS[name])
-    A_L, A_M, A_D = tri(ac)
-    img, d = machine_plate(w)
-    cx = w / 2
-    if name == "rotary-drill":
-        rect(d, [w * 0.28, w * 0.28, w * 0.72, w * 0.72], FRAME)
-        rect(d, [w * 0.34, w * 0.34, w * 0.66, w * 0.66], MET_D)
-        ell(d, [w * 0.42, w * 0.42, w * 0.58, w * 0.58], A_M, A_D)
-    elif name in ("copper-smelter", "blast-furnace", "alloy-furnace", "cement-kiln"):
-        aw = w * 0.5
-        x0, y0 = cx - aw / 2, w * 0.34
-        rect(d, [x0, y0, x0 + aw, y0 + w * 0.38], FRAME, r=int(aw / 4))
-        rect(d, [x0 + 2, y0 + 2, x0 + aw - 2, y0 + w * 0.30],
-             shade(A_M, 0.9), r=int(aw / 5))
-        rect(d, [cx - aw * 0.14, y0 + w * 0.12, cx + aw * 0.14, y0 + w * 0.36],
-             A_L, line=None, lw=0)
-        claw_corners(d, w, 3, int(w * 0.09))
-    elif name == "electrolysis-plant":
-        for i, fx in enumerate([0.28, 0.5, 0.72]):
-            px = int(w * fx)
-            c = [A_M, MET_L, A_M][i]
-            rect(d, [px - 3, w * 0.22, px + 3, w * 0.78], c, line=A_D)
-        d.line([int(w * 0.28), int(w * 0.32), int(w * 0.72), int(w * 0.62)],
-               fill=A_L, width=2)
-    elif name == "chemical-processor":
-        rect(d, [w * 0.2, w * 0.24, w * 0.46, w * 0.5], A_M, line=A_D, r=2)
-        poly(d, [(w * 0.58, w * 0.5), (w * 0.78, w * 0.5), (w * 0.68, w * 0.3)],
-             A_L, line=A_D, lw=1)
-        d.line([int(w * 0.46), int(w * 0.37), int(w * 0.58), int(w * 0.44)],
-               fill=FRAME, width=2)
-    elif name == "centrifuge":
-        ell(d, [w * 0.2, w * 0.2, w * 0.8, w * 0.8], FRAME)
-        ell(d, [w * 0.3, w * 0.3, w * 0.7, w * 0.7], MET_D, line=FRAME)
-        ell(d, [w * 0.42, w * 0.42, w * 0.58, w * 0.58], A_M, A_D)
-        for ang in (20, 140, 260):
-            ax = math.cos(math.radians(ang)) * w * 0.24
-            ay = math.sin(math.radians(ang)) * w * 0.24
-            d.line([cx, cx, cx + ax, cx + ay], fill=A_L, width=3)
-    elif name == "nuclear-reactor":
-        ring = w * 0.32
-        ell(d, [cx - ring, cx - ring, cx + ring, cx + ring], FRAME)
-        ell(d, [cx - ring * 0.72, cx - ring * 0.72, cx + ring * 0.72,
-                cx + ring * 0.72], MET_D)
-        core = w * 0.18
-        ell(d, [cx - core, cx - core, cx + core, cx + core], A_M, line=A_D)
-        ci = core * 0.5
-        ell(d, [cx - ci, cx - ci, cx + ci, cx + ci], A_L)
-        for ang in range(0, 360, 45):
-            ax = math.cos(math.radians(ang))
-            ay = math.sin(math.radians(ang))
-            d.line([cx + ax * core, cx + ay * core, cx + ax * ring * 0.95,
-                    cx + ay * ring * 0.95], fill=FRAME, width=2)
-    elif name == "coal-generator":
-        rect(d, [w * 0.18, w * 0.18, w * 0.82, w * 0.6], FRAME, r=2)
-        flame = [(cx, w * 0.18), (cx + w * 0.14, w * 0.4), (cx + w * 0.07, w * 0.58),
-                 (cx - w * 0.07, w * 0.58), (cx - w * 0.14, w * 0.4)]
-        poly(d, flame, A_M, line=A_D, lw=1)
-        poly(d, [(cx, w * 0.28), (cx + w * 0.07, w * 0.44), (cx - w * 0.07, w * 0.44)],
-             A_L)
-        rect(d, [w * 0.24, w * 0.68, w * 0.76, w * 0.8], MET_D)
-    elif name == "battery-cell":
-        bw = w * 0.52
-        x0, y0 = cx - bw / 2, w * 0.22
-        rect(d, [x0, y0, x0 + bw, y0 + w * 0.56], A_M, line=A_D, r=2)
-        rect(d, [x0 + 3, y0 + 3, x0 + bw - 3, y0 + w * 0.16], A_L, line=None, lw=0)
-        rect(d, [x0 - 4, cx - 4, x0, cx + 4], MET_L, line=MET_D)
-        rect(d, [x0 + bw, cx - 4, x0 + bw + 4, cx + 4], MET_D, line=FRAME)
-    elif name == "recycler":
-        ell(d, [w * 0.22, w * 0.22, w * 0.78, w * 0.78], FRAME)
-        rr = w * 0.24
-        for start in (210, 330, 90):
-            pts = [(cx + math.cos(math.radians(start + t)) * rr,
-                    cx + math.sin(math.radians(start + t)) * rr)
-                   for t in range(0, 61, 12)]
-            d.line(pts, fill=A_M, width=3)
-            ex, ey = pts[-1]
-            a = math.atan2(ey - pts[-2][1], ex - pts[-2][0])
-            d.polygon([(ex + math.cos(a) * 5, ey + math.sin(a) * 5),
-                       (ex + math.cos(a + 2.5) * 5, ey + math.sin(a + 2.5) * 5),
-                       (ex + math.cos(a - 2.5) * 5, ey + math.sin(a - 2.5) * 5)],
-                      fill=A_M)
-    elif name == "neutralizer":
-        ell(d, [w * 0.24, w * 0.24, w * 0.76, w * 0.76], FRAME)
-        for i in range(3):
-            yy = cx - 6 + i * 6
-            pts = [(w * 0.32 + k * (w * 0.36 / 8), yy + math.sin(k * 1.3) * 2)
-                   for k in range(9)]
-            d.line(pts, fill=[A_D, A_M, A_L][i], width=2)
-    elif name == "filter-press":
-        for i, fy in enumerate([0.26, 0.44, 0.62]):
-            rect(d, [w * 0.24, w * fy, w * 0.76, w * fy + w * 0.1],
-                 [A_M, A_L, A_M][i], line=A_D)
-        d.line([cx, w * 0.16, cx, w * 0.84], fill=FRAME, width=1)
-    elif name == "acid-plant":
-        ell(d, [w * 0.16, w * 0.24, w * 0.56, w * 0.64], A_M, line=A_D)
-        ell(d, [w * 0.22, w * 0.3, w * 0.5, w * 0.58], A_L)
-        rect(d, [w * 0.62, w * 0.2, w * 0.8, w * 0.8], FRAME, r=2)
-        rect(d, [w * 0.66, w * 0.26, w * 0.76, w * 0.42], A_M, line=None, lw=0)
-        d.line([int(w * 0.56), int(w * 0.44), int(w * 0.62), int(w * 0.44)],
-               fill=FRAME, width=2)
-    elif name == "resource-refinery":
-        rect(d, [w * 0.14, w * 0.3, w * 0.3, w * 0.84], MET_D)
-        rect(d, [w * 0.38, w * 0.16, w * 0.54, w * 0.84], FRAME)
-        rect(d, [w * 0.42, w * 0.24, w * 0.5, w * 0.76], A_M, line=None, lw=0)
-        rect(d, [w * 0.62, w * 0.4, w * 0.82, w * 0.84], shade(A_M, 1.1),
-             line=A_D)
-        d.line([int(w * 0.3), int(w * 0.5), int(w * 0.38), int(w * 0.5)],
-               fill=FRAME, width=2)
-        d.line([int(w * 0.54), int(w * 0.5), int(w * 0.62), int(w * 0.5)],
-               fill=FRAME, width=2)
-    elif name in ("steel-container", "steel-vault"):
-        inset = w * 0.12
-        bevel_rect(d, int(inset), int(inset), int(w - inset), int(w - inset),
-                   MET_L, shade(MET_M, 0.96), MET_D, edge=1)
-        for i in range(1, 3):
-            yy = int(inset + (w - 2 * inset) * i / 3)
-            d.line([inset + 2, yy, w - inset - 2, yy], fill=MET_D, width=2)
-        d.line([inset + 2, int(yy + 2), w - inset - 2, int(yy + 2)],
-               fill=MET_L, width=1)
-    elif name == "supply-unloader":
-        ell(d, [w * 0.2, w * 0.2, w * 0.8, w * 0.8], FRAME)
-        ell(d, [w * 0.32, w * 0.32, w * 0.68, w * 0.68], A_M, line=A_D)
-        ell(d, [w * 0.44, w * 0.44, w * 0.56, w * 0.56], A_L)
-    elif name == "unit-factory":
-        ell(d, [w * 0.2, w * 0.2, w * 0.8, w * 0.8], FRAME)
-        ell(d, [w * 0.28, w * 0.28, w * 0.72, w * 0.72], MET_D, line=FRAME)
-        ell(d, [w * 0.4, w * 0.4, w * 0.6, w * 0.6], A_M, line=A_D)
-        for rx, ry in [(w * 0.12, w * 0.12), (w - w * 0.12, w * 0.12),
-                       (w * 0.12, w - w * 0.12), (w - w * 0.12, w - w * 0.12)]:
-            rect(d, [rx - 4, ry - 4, rx + 4, ry + 4], MET_D)
+    img, d = plate(w)
+    claws(d, w, 0.16)
+    r = w * 0.30
+    oct(d, w / 2, w / 2, r, fill=MET_F, line=shade(MET_F, 0.8))
+    oct(d, w / 2, w / 2, r * 0.62, fill=MET_D)
+    r3 = r * 0.34
+    ell(d, [w / 2 - r3, w / 2 - r3, w / 2 + r3, w / 2 + r3], shade(ac, 0.9),
+        line=shade(ac, 0.6))
+    ri = r3 * 0.5
+    ell(d, [w / 2 - ri, w / 2 - ri, w / 2 + ri, w / 2 + ri], shade(ac, 1.5))
+    return img
+
+
+def bp_kiln_furnace(name, size):
+    w = size * S
+    ac = hx(BLOCK_ACCENTS[name])
+    img, d = plate(w)
+    u = w / 64
+    for qx, qy in [(u * 6, u * 6), (w - u * 6, u * 6), (u * 6, w - u * 6),
+                   (w - u * 6, w - u * 6)]:
+        rect(d, [min(qx, qx + u * 8 * (1 if qx < w / 2 else -1)),
+                 min(qy, qy + u * 8 * (1 if qy < w / 2 else -1)),
+                 max(qx, qx + u * 8 * (1 if qx < w / 2 else -1)),
+                 max(qy, qy + u * 8 * (1 if qy < w / 2 else -1))], MET_F)
+    oct(d, w / 2, w / 2, w * 0.32, fill=MET_F)
+    oct(d, w / 2, w / 2, w * 0.22, fill=shade(MET_F, 0.75))
+    oct(d, w / 2, w / 2, w * 0.14, fill=shade(ac, 0.85))
+    for i, fy in enumerate([w * 0.2, w * 0.72]):
+        rect(d, [w * 0.08, fy, w * 0.14, fy + w * 0.08], shade(ac, 1.1))
+        rect(d, [w * 0.86, fy, w * 0.92, fy + w * 0.08], shade(ac, 1.1))
+    return img
+
+
+def bp_mixer(name, size):
+    w = size * S
+    ac = hx(BLOCK_ACCENTS[name])
+    img, d = plate(w)
+    u = w / 64
+    for qx, qy in [(u * 8, u * 8), (w - u * 14, u * 8), (u * 8, w - u * 14),
+                   (w - u * 14, w - u * 14)]:
+        rect(d, [qx, qy, qx + u * 6, qy + u * 6], MET_D, line=MET_F)
+    r = w * 0.30
+    ell(d, [w / 2 - r, w / 2 - r, w / 2 + r, w / 2 + r], MET_F, line=shade(MET_F, 0.8))
+    r2 = r * 0.72
+    ell(d, [w / 2 - r2, w / 2 - r2, w / 2 + r2, w / 2 + r2], shade(MET_F, 1.2))
+    for i in range(4):
+        a = i * math.pi / 2 + math.pi / 4
+        px = w / 2 + math.cos(a) * r2 * 0.55
+        py = w / 2 + math.sin(a) * r2 * 0.55
+        ell(d, [px - u * 3, py - u * 3, px + u * 3, py + u * 3], ac)
+    return img
+
+
+def bp_centrifuge(name, size):
+    w = size * S
+    ac = hx(BLOCK_ACCENTS[name])
+    img, d = plate(w)
+    u = w / 96
+    for qx, qy in [(u * 8, u * 8), (w - u * 20, u * 8), (u * 8, w - u * 20),
+                   (w - u * 20, w - u * 20)]:
+        rect(d, [qx, qy, qx + u * 12, qy + u * 12], MET_D, line=MET_F)
+    r = w * 0.30
+    ell(d, [w / 2 - r, w / 2 - r, w / 2 + r, w / 2 + r], MET_F, line=shade(MET_F, 0.8))
+    r2 = r * 0.7
+    ell(d, [w / 2 - r2, w / 2 - r2, w / 2 + r2, w / 2 + r2], shade(MET_F, 1.25))
+    r3 = r * 0.4
+    ell(d, [w / 2 - r3, w / 2 - r3, w / 2 + r3, w / 2 + r3], ac, line=shade(ac, 0.6))
+    ri = r3 * 0.45
+    ell(d, [w / 2 - ri, w / 2 - ri, w / 2 + ri, w / 2 + ri], shade(ac, 1.6))
+    for ang in range(0, 360, 90):
+        ax = math.cos(math.radians(ang + 45)) * r2 * 0.8
+        ay = math.sin(math.radians(ang + 45)) * r2 * 0.8
+        d.line([w / 2, w / 2, w / 2 + ax, w / 2 + ay], fill=MET_D, width=max(2, int(u * 3)))
+    return img
+
+
+def bp_reactor(name, size):
+    w = size * S
+    ac = hx(BLOCK_ACCENTS[name])
+    img, d = plate(w)
+    u = w / 96
+    for ang_box in [(w * 0.42, u * 2, w * 0.58, u * 12),
+                    (w * 0.42, w - u * 12, w * 0.58, w - u * 2),
+                    (u * 2, w * 0.42, u * 12, w * 0.58),
+                    (w - u * 12, w * 0.42, w - u * 2, w * 0.58)]:
+        rect(d, list(ang_box), shade(ac, 0.8), line=shade(ac, 0.55))
+    claws(d, w, u * 4, MET_F)
+    r = w * 0.30
+    ell(d, [w / 2 - r, w / 2 - r, w / 2 + r, w / 2 + r], MET_F, line=shade(MET_F, 0.8))
+    oct(d, w / 2, w / 2, r * 0.72, fill=shade(MET_F, 1.2), line=MET_F)
+    r3 = r * 0.38
+    ell(d, [w / 2 - r3, w / 2 - r3, w / 2 + r3, w / 2 + r3], ac, line=shade(ac, 0.6))
+    ri = r3 * 0.5
+    ell(d, [w / 2 - ri, w / 2 - ri, w / 2 + ri, w / 2 + ri], shade(ac, 1.6))
+    return img
+
+
+def bp_combustion(name, size):
+    w = size * S
+    ac = hx(BLOCK_ACCENTS[name])
+    img, d = plate(w)
+    u = w / 64
+    rect(d, [w * 0.3, w * 0.3, w * 0.7, w * 0.7], MET_F, r=2)
+    rect(d, [w * 0.36, w * 0.36, w * 0.64, w * 0.56], shade(MET_F, 1.3))
+    rect(d, [w * 0.42, w * 0.42, w * 0.58, w * 0.52], ac, line=shade(ac, 0.6))
+    rect(d, [w * 0.14, w * 0.14, w * 0.24, w * 0.3], MET_D, line=MET_F)
+    rect(d, [w * 0.76, w * 0.14, w * 0.86, w * 0.3], MET_D, line=MET_F)
+    d.line([int(w * 0.5), int(w * 0.14), int(w * 0.5), int(w * 0.3)],
+           fill=shade(ac, 1.2), width=max(2, int(u * 3)))
+    return img
+
+
+def bp_airfactory(name, size):
+    w = size * S
+    ac = hx(BLOCK_ACCENTS[name])
+    img, d = plate(w)
+    u = w / 96
+    rect(d, [u * 12, u * 12, w - u * 12, w - u * 12], shade(MET_M, 1.06),
+         line=MET_D, r=6)
+    rect(d, [u * 20, u * 20, w - u * 20, w - u * 20], MET_D, r=4)
+    rect(d, [u * 28, u * 28, w - u * 28, w - u * 28], shade(MET_D, 1.15), r=3)
+    r = w * 0.14
+    ell(d, [w / 2 - r, w / 2 - r, w / 2 + r, w / 2 + r], ac, line=shade(ac, 0.6))
+    for qx, qy in [(u * 8, u * 8), (w - u * 16, u * 8), (u * 8, w - u * 16),
+                   (w - u * 16, w - u * 16)]:
+        rect(d, [qx, qy, qx + u * 8, qy + u * 8], MET_F)
+    return img
+
+
+def bp_drill(size):
+    w = size * S
+    img, d = plate(w)
+    u = w / 64
+    rect(d, [w * 0.42, u * 4, w * 0.58, w * 0.42], MET_F)
+    rect(d, [w * 0.42, w * 0.58, w * 0.58, w - u * 4], MET_F)
+    rect(d, [u * 4, w * 0.42, w * 0.42, w * 0.58], MET_F)
+    rect(d, [w * 0.58, w * 0.42, w - u * 4, w * 0.58], MET_F)
+    r = w * 0.2
+    ell(d, [w / 2 - r, w / 2 - r, w / 2 + r, w / 2 + r], MET_D, line=MET_F)
+    r2 = r * 0.5
+    ell(d, [w / 2 - r2, w / 2 - r2, w / 2 + r2, w / 2 + r2], MET_L, line=MET_D)
     return img
 
 
@@ -368,52 +377,59 @@ def drill_rotator():
     img = img_new(w, w)
     d = ImageDraw.Draw(img)
     cx = w / 2
-    r = w * 0.3
-    ell(d, [cx - r, cx - r, cx + r, cx + r], MET_D, line=FRAME)
-    for i in range(4):
-        a = math.radians(i * 90 + 45)
-        d.line([cx + math.cos(a) * r * 0.25, cx + math.sin(a) * r * 0.25,
-                cx + math.cos(a) * r * 0.85, cx + math.sin(a) * r * 0.85],
-               fill=MET_L, width=3)
-    ell(d, [cx - r * 0.22, cx - r * 0.22, cx + r * 0.22, cx + r * 0.22],
-        MET_L, line=FRAME)
+    r = w * 0.32
+    for i in range(3):
+        a = i * 2 * math.pi / 3
+        pts = [(cx + math.cos(a) * r, cx + math.sin(a) * r),
+               (cx + math.cos(a + 2.2) * r * 0.45, cx + math.sin(a + 2.2) * r * 0.45),
+               (cx + math.cos(a - 2.2) * r * 0.45, cx + math.sin(a - 2.2) * r * 0.45)]
+        poly(d, pts, MET_M, line=MET_D, lw=1)
+        poly(d, [(cx + math.cos(a) * r * 0.9, cx + math.sin(a) * r * 0.9),
+                 (cx + math.cos(a + 2.0) * r * 0.4, cx + math.sin(a + 2.0) * r * 0.4),
+                 (cx + math.cos(a - 2.0) * r * 0.4, cx + math.sin(a - 2.0) * r * 0.4)],
+             MET_L, line=None, lw=0)
+    ell(d, [cx - r * 0.3, cx - r * 0.3, cx + r * 0.3, cx + r * 0.3], MET_D,
+        line=MET_F)
     return img
 
 
-def turret_gun(name, size):
-    w = size * S
+def bp_turret(name):
+    w = TURRET_CANVAS[name]
     img = img_new(w, w)
     d = ImageDraw.Draw(img)
     cx = w / 2
     L, M, D = tri(hx(TURRET_HUE[name]))
     m = 4
     if name == "bronze-gun":
-        rect(d, [cx - 4, m, cx + 4, 16], D, r=1)
-        rect(d, [cx - 2, m, cx, 14], L, line=None, lw=0)
-        rect(d, [cx - 7, 14, cx + 7, 27], M, line=D, r=2)
-        d.line([cx - 6, 17, cx + 6, 17], fill=L, width=1)
+        rect(d, [cx - 3, m, cx + 3, 15], D)
+        rect(d, [cx - 1, m + 1, cx + 1, 13], L, line=None, lw=0)
+        rect(d, [cx - 8, 13, cx + 8, 28], M, line=D, lw=1)
+        rect(d, [cx - 8, 15, cx + 8, 17], L, line=None, lw=0)
+        d.line([cx - 8, 26, cx + 8, 26], fill=D, width=1)
     elif name == "steel-howitzer":
-        rect(d, [cx - 7, m, cx + 7, 12], D, r=1)
-        rect(d, [cx - 4, 8, cx + 4, 34], M, line=D)
-        d.line([cx - 4, 12, cx + 4, 12], fill=L, width=2)
-        rect(d, [cx - 13, 30, cx + 13, 56], M, line=D, r=3)
-        rect(d, [cx - 13, 34, cx + 13, 36], L, line=None, lw=0)
-        d.line([cx - 13, 53, cx + 13, 53], fill=D, width=2)
+        rect(d, [cx - 8, m, cx + 8, 12], D)
+        rect(d, [cx - 4, 8, cx + 4, 36], M, line=D)
+        rect(d, [cx - 4, 12, cx + 4, 15], L, line=None, lw=0)
+        rect(d, [cx - 14, 30, cx + 14, 58], M, line=D, lw=1, r=3)
+        rect(d, [cx - 14, 34, cx + 14, 37], L, line=None, lw=0)
+        d.line([cx - 14, 55, cx + 14, 55], fill=D, width=2)
+        ell(d, [cx - 5, 44, cx + 5, 52], D)
     elif name == "aluminum-flak":
-        for off in (-6, 6):
-            rect(d, [cx + off - 2, m, cx + off + 2, 26], M, line=D)
-            d.line([cx + off - 1, m + 1, cx + off - 1, 8], fill=L, width=1)
-        ell(d, [cx - 12, 22, cx + 12, 46], M, line=D)
-        ell(d, [cx - 6, 28, cx + 6, 40], L, line=D)
+        for off in (-7, 7):
+            rect(d, [cx + off - 2, m, cx + off + 2, 24], M, line=D)
+            d.line([cx + off - 1, m + 1, cx + off - 1, 7], fill=L, width=1)
+        ell(d, [cx - 13, 20, cx + 13, 46], M, line=D)
+        ell(d, [cx - 7, 26, cx + 7, 40], L, line=D)
+        ell(d, [cx - 2, 31, cx + 2, 35], shade(L, 1.2))
     elif name == "uranium-lance":
-        rect(d, [cx - 15, 8, cx - 11, 98], D)
-        rect(d, [cx + 11, 8, cx + 15, 98], D)
-        rect(d, [cx - 5, m, cx + 5, 104], M, line=D)
-        rect(d, [cx - 1, 8, cx + 1, 102], L, line=None, lw=0)
-        rect(d, [cx - 20, 94, cx + 20, 122], M, line=D, r=4)
-        rect(d, [cx - 20, 100, cx + 20, 104], L, line=None, lw=0)
-        d.line([cx - 20, 119, cx + 20, 119], fill=D, width=2)
-        ell(d, [cx - 8, 108, cx + 8, 120], L, line=D)
+        rect(d, [cx - 16, 8, cx - 12, 96], D)
+        rect(d, [cx + 12, 8, cx + 16, 96], D)
+        rect(d, [cx - 5, m, cx + 5, 102], M, line=D)
+        rect(d, [cx - 1, 8, cx + 1, 100], L, line=None, lw=0)
+        rect(d, [cx - 22, 92, cx + 22, 122], M, line=D, r=4)
+        rect(d, [cx - 22, 98, cx + 22, 102], L, line=None, lw=0)
+        d.line([cx - 22, 119, cx + 22, 119], fill=D, width=2)
+        ell(d, [cx - 9, 106, cx + 9, 118], L, line=D)
     return img
 
 
@@ -423,64 +439,88 @@ def wall_sprite(name):
     L, M, D = tri(hx(WALLS[name]))
     img = img_new(w, w)
     d = ImageDraw.Draw(img)
-    bevel_rect(d, 0, 0, w - 1, w - 1, L, M, D, edge=max(2, w // 16))
-    inset = max(4, w // 6)
-    d.line([inset, inset, w - inset, inset], fill=shade(L, 1.06), width=1)
-    d.line([inset, w - inset - 1, w - inset, w - inset - 1], fill=D, width=1)
+    e = max(2, w // 16)
+    rect(d, [0, 0, w - 1, w - 1], M)
+    d.line([0, 0, w - 1, 0], fill=L, width=e)
+    d.line([0, 0, 0, w - 1], fill=L, width=e)
+    d.line([0, w - e, w - 1, w - e], fill=D, width=e)
+    d.line([w - e, 0, w - e, w - 1], fill=D, width=e)
+    inset = max(3, w // 7)
+    d.line([inset, inset, w - inset, inset], fill=shade(L, 1.05), width=1)
+    d.line([inset, w - inset, w - inset, w - inset], fill=shade(D, 0.92), width=1)
     return img
 
 
 def core_sprite(size, accent_hex):
     w = size * S
-    L, M, D = tri(hx("9aa0a8"))
     acc = hx(accent_hex)
-    img = img_new(w, w)
-    d = ImageDraw.Draw(img)
-    bevel_rect(d, 0, 0, w - 1, w - 1, L, M, D, edge=max(2, w // 24))
+    img, d = plate(w)
     u = w / 96
-    for mx, my in [(u * 14, u * 14), (w - u * 14, u * 14),
-                   (u * 14, w - u * 14), (w - u * 14, w - u * 14)]:
-        rect(d, [mx - u * 8, my - u * 8, mx + u * 8, my + u * 8], FRAME, r=2)
-        rect(d, [mx - u * 3, my - u * 3, mx + u * 3, my + u * 3], MET_D)
-    ring = w * 0.30
-    pts = [(w / 2 + ring * math.cos(math.pi / 4 + i * math.pi / 2) * 1.2,
-            w / 2 + ring * math.sin(math.pi / 4 + i * math.pi / 2)) for i in range(4)]
-    poly(d, pts, FRAME)
-    r2 = ring * 0.72
-    pts2 = [(w / 2 + r2 * math.cos(math.pi / 4 + i * math.pi / 2) * 1.2,
+    for mx, my in [(u * 16, u * 16), (w - u * 16, u * 16),
+                   (u * 16, w - u * 16), (w - u * 16, w - u * 16)]:
+        rect(d, [mx - u * 9, my - u * 9, mx + u * 9, my + u * 9], MET_F, r=2)
+        rect(d, [mx - u * 4, my - u * 4, mx + u * 4, my + u * 4], MET_D)
+    r = w * 0.26
+    pts = [(w / 2 + r * math.cos(math.pi / 4 + i * math.pi / 2),
+            w / 2 + r * math.sin(math.pi / 4 + i * math.pi / 2)) for i in range(4)]
+    poly(d, pts, MET_F)
+    r2 = r * 0.62
+    pts2 = [(w / 2 + r2 * math.cos(math.pi / 4 + i * math.pi / 2),
              w / 2 + r2 * math.sin(math.pi / 4 + i * math.pi / 2)) for i in range(4)]
     poly(d, pts2, MET_D)
-    cr = ring * 0.42
-    ell(d, [w / 2 - cr, w / 2 - cr, w / 2 + cr, w / 2 + cr], acc, line=shade(acc, 0.7))
+    cr = r * 0.3
+    ell(d, [w / 2 - cr, w / 2 - cr, w / 2 + cr, w / 2 + cr], acc,
+        line=shade(acc, 0.6))
     cri = cr * 0.45
-    ell(d, [w / 2 - cri, w / 2 - cri, w / 2 + cri, w / 2 + cri],
-        shade(acc, 1.55))
+    ell(d, [w / 2 - cri, w / 2 - cri, w / 2 + cri, w / 2 + cri], shade(acc, 1.55))
+    return img
+
+
+def bp_storage(name, size):
+    w = size * S
+    img, d = plate(w)
+    inset = int(w * 0.14)
+    rect(d, [inset, inset, w - inset, w - inset], shade(MET_M, 0.95),
+         line=MET_D, lw=1)
+    for i in range(1, 3):
+        yy = int(inset + (w - 2 * inset) * i / 3)
+        d.line([inset + 2, yy, w - inset - 2, yy], fill=MET_D, width=2)
+        d.line([inset + 2, yy + 2, w - inset - 2, yy + 2], fill=MET_L, width=1)
+    return img
+
+
+def bp_unloader(size):
+    w = size * S
+    img, d = plate(w)
+    r = w * 0.32
+    ell(d, [w / 2 - r, w / 2 - r, w / 2 + r, w / 2 + r], MET_F)
+    r2 = r * 0.66
+    ell(d, [w / 2 - r2, w / 2 - r2, w / 2 + r2, w / 2 + r2], MET_D, line=MET_F)
+    r3 = r * 0.3
+    ell(d, [w / 2 - r3, w / 2 - r3, w / 2 + r3, w / 2 + r3], shade(MET_L, 1.1),
+        line=MET_D)
     return img
 
 
 ORE_STONE_L = (86, 84, 82, 255)
-ORE_STONE_D = (70, 69, 67, 255)
 
 
 def ore_tile(seed, item_hex):
     rng = random.Random(seed)
     img = img_new()
     d = ImageDraw.Draw(img)
-    rect(d, [0, 0, S - 1, S - 1], ORE_STONE_L)
-    for _ in range(6):
-        x, y = rng.randrange(1, 30), rng.randrange(1, 30)
-        s = rng.choice((1, 2))
-        d.rectangle([x, y, x + s, y + s], fill=ORE_STONE_D)
     mineral = hx(item_hex)
-    MM, ML, MD = shade(mineral, 0.95), shade(mineral, 1.25), shade(mineral, 0.7)
-    for _ in range(4):
-        x, y = rng.randrange(5, 22), rng.randrange(5, 22)
-        for _ in range(rng.randint(3, 5)):
-            ox, oy = x + rng.randint(-4, 4), y + rng.randint(-4, 4)
-            s = rng.choice((1, 2))
-            c = rng.choice((MM, ML))
-            d.rectangle([ox, oy, ox + s, oy + s], fill=c)
-            d.point([(ox, oy + s)], fill=MD)
+    M, L, D = shade(mineral, 0.92), shade(mineral, 1.25), shade(mineral, 0.62)
+    for _ in range(5):
+        x, y = rng.randrange(6, 26), rng.randrange(6, 26)
+        s = rng.uniform(3.5, 6.5)
+        pts = []
+        for i in range(5):
+            a = 2 * math.pi * i / 5 + rng.uniform(-0.3, 0.3)
+            rr = s * rng.uniform(0.7, 1.15)
+            pts.append((x + rr * math.cos(a), y + rr * math.sin(a) * 0.8))
+        poly(d, pts, M, line=D, lw=1)
+        poly(d, [pts[3], pts[4], pts[0]], L, line=None, lw=0)
     return img
 
 
@@ -492,31 +532,35 @@ def unit_body(name):
     d = ImageDraw.Draw(img)
     cx = w / 2
     if name == "bronze-crawler":
-        poly(d, [(cx - 12, cx + 8), (cx - 14, cx - 2), (cx - 8, cx - 12),
-                 (cx + 8, cx - 12), (cx + 14, cx - 2), (cx + 12, cx + 8)], MET_M,
-             line=MET_D, lw=1)
-        poly(d, [(cx - 9, cx - 9), (cx + 9, cx - 9), (cx + 5, cx - 3),
-                 (cx - 5, cx - 3)], MET_L, line=None, lw=0)
-        ell(d, [cx - 4, cx + 1, cx + 4, cx + 9], acc, line=shade(acc, 0.7))
-        rect(d, [cx - 2, cx - 17, cx + 2, cx - 11], MET_D)
-    elif name == "aluminum-wasp":
-        poly(d, [(cx, 4), (cx + 10, cx - 4), (cx + 7, cx + 10), (cx - 7, cx + 10),
-                 (cx - 10, cx - 4)], MET_M, line=MET_D, lw=1)
-        poly(d, [(cx, 6), (cx + 5, cx - 5), (cx - 5, cx - 5)], MET_L, line=None, lw=0)
-        ell(d, [cx - 3, cx - 4, cx + 3, cx + 2], shade(acc, 1.1), line=MET_D)
-        ell(d, [cx - 3, cx + 10, cx + 3, cx + 15], acc)
-    else:
-        poly(d, [(cx - 16, cx - 4), (cx - 10, cx - 13), (cx + 10, cx - 13),
-                 (cx + 16, cx - 4), (cx + 12, cx + 12), (cx - 12, cx + 12)],
+        poly(d, [(cx - 15, cx + 6), (cx - 12, cx - 10), (cx, cx - 15),
+                 (cx + 12, cx - 10), (cx + 15, cx + 6), (cx, cx + 13)],
              MET_M, line=MET_D, lw=1)
-        rect(d, [cx - 18, cx - 4, cx - 10, cx + 6], MET_L, line=MET_D, r=2)
-        rect(d, [cx + 10, cx - 4, cx + 18, cx + 6], MET_L, line=MET_D, r=2)
-        poly(d, [(cx - 8, cx - 10), (cx + 8, cx - 10), (cx + 4, cx - 4),
-                 (cx - 4, cx - 4)], MET_L, line=None, lw=0)
-        ell(d, [cx - 4, cx + 2, cx + 4, cx + 10], acc, line=shade(acc, 0.7))
-        rect(d, [cx - 3, cx - 19, cx + 3, cx - 12], MET_D)
-        rect(d, [cx - 13, cx - 18, cx - 8, cx - 12], MET_D)
-        rect(d, [cx + 8, cx - 18, cx + 13, cx - 12], MET_D)
+        poly(d, [(cx - 10, cx - 8), (cx, cx - 12), (cx + 10, cx - 8),
+                 (cx, cx - 3)], MET_L, line=None, lw=0)
+        r = 5
+        ell(d, [cx - r, cx - r + 2, cx + r, cx + r + 2], acc, line=shade(acc, 0.6))
+        ri = r * 0.45
+        ell(d, [cx - ri, cx - ri + 2, cx + ri, cx + ri + 2], shade(acc, 1.5))
+    elif name == "aluminum-wasp":
+        poly(d, [(cx, 5), (cx + 11, cx - 6), (cx + 8, cx + 8), (cx + 3, cx + 12),
+                 (cx - 3, cx + 12), (cx - 8, cx + 8), (cx - 11, cx - 6)],
+             MET_M, line=MET_D, lw=1)
+        poly(d, [(cx, 7), (cx + 5, cx - 6), (cx - 5, cx - 6)], MET_L, line=None, lw=0)
+        ell(d, [cx - 3, cx - 5, cx + 3, cx], shade(acc, 1.1), line=MET_D)
+        ell(d, [cx - 3, cx + 9, cx + 3, cx + 14], acc)
+    else:
+        poly(d, [(cx - 17, cx - 2), (cx - 11, cx - 12), (cx + 11, cx - 12),
+                 (cx + 17, cx - 2), (cx + 12, cx + 11), (cx - 12, cx + 11)],
+             MET_M, line=MET_D, lw=1)
+        rect(d, [cx - 19, cx - 3, cx - 10, cx + 6], MET_L, line=MET_D, lw=1, r=2)
+        rect(d, [cx + 10, cx - 3, cx + 19, cx + 6], MET_L, line=MET_D, lw=1, r=2)
+        poly(d, [(cx - 9, cx - 9), (cx + 9, cx - 9), (cx + 5, cx - 4),
+                 (cx - 5, cx - 4)], MET_L, line=None, lw=0)
+        r = 5
+        ell(d, [cx - r, cx + 1, cx + r, cx + 11], acc, line=shade(acc, 0.6))
+        rect(d, [cx - 3, cx - 18, cx + 3, cx - 11], MET_D)
+        rect(d, [cx - 14, cx - 17, cx - 9, cx - 11], MET_D)
+        rect(d, [cx + 9, cx - 17, cx + 14, cx - 11], MET_D)
     return img
 
 
@@ -525,12 +569,12 @@ def unit_base(name):
     img = img_new(w, w)
     d = ImageDraw.Draw(img)
     cx = w / 2
-    ell(d, [cx - w * 0.26, cx - w * 0.2, cx + w * 0.26, cx + w * 0.2], FRAME)
-    ell(d, [cx - w * 0.18, cx - w * 0.13, cx + w * 0.18, cx + w * 0.13], MET_D)
+    ell(d, [cx - w * 0.28, cx - w * 0.22, cx + w * 0.28, cx + w * 0.22], MET_F)
+    ell(d, [cx - w * 0.19, cx - w * 0.14, cx + w * 0.19, cx + w * 0.14], MET_D)
     return img
 
 
-def unit_leg(size):
+def unit_leg():
     img = img_new(48, 48)
     d = ImageDraw.Draw(img)
     d.line([6, 42, 40, 6], fill=MET_D, width=7)
@@ -548,8 +592,10 @@ def main():
             item_crystal(hash(name) & 0xFFFF, hexs).save(f"{ROOT}/items/{name}.png")
         elif kind == "ingot":
             item_ingot(hexs).save(f"{ROOT}/items/{name}.png")
-        elif kind == "pebbles":
-            item_pebbles(hash(name) & 0xFFFF, hexs).save(f"{ROOT}/items/{name}.png")
+        elif kind == "alloy":
+            item_alloy(hexs).save(f"{ROOT}/items/{name}.png")
+        elif kind == "chunks":
+            item_chunks(hash(name) & 0xFFFF, hexs).save(f"{ROOT}/items/{name}.png")
         else:
             item_sack(hexs).save(f"{ROOT}/items/{name}.png")
         count += 1
@@ -558,15 +604,36 @@ def main():
         liquid_icon(hexs).save(f"{ROOT}/liquids/{name}.png")
         count += 1
     for name, size in MACHINE_SIZES.items():
-        if name == "unit-factory":
-            draw_machine(name, size).save(f"{ROOT}/blocks/{name}.png")
+        if name == "rotary-drill":
+            bp_drill(size).save(f"{ROOT}/blocks/{name}.png")
+        elif name in ("copper-smelter", "blast-furnace", "alloy-furnace"):
+            bp_smelter(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name == "cement-kiln":
+            bp_kiln_furnace(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name in ("electrolysis-plant", "chemical-processor", "neutralizer",
+                      "filter-press", "acid-plant"):
+            bp_mixer(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name == "centrifuge":
+            bp_centrifuge(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name == "nuclear-reactor":
+            bp_reactor(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name == "coal-generator":
+            bp_combustion(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name == "unit-factory":
+            bp_airfactory(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name == "resource-refinery":
+            bp_mixer(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name in ("steel-container", "steel-vault"):
+            bp_storage(name, size).save(f"{ROOT}/blocks/{name}.png")
+        elif name == "supply-unloader":
+            bp_unloader(size).save(f"{ROOT}/blocks/{name}.png")
         else:
-            draw_machine(name, size).save(f"{ROOT}/blocks/{name}.png")
+            draw_machine_fallback(name, size).save(f"{ROOT}/blocks/{name}.png")
         count += 1
     drill_rotator().save(f"{ROOT}/blocks/rotary-drill-rotator.png")
     count += 1
-    for name, size in TURRET_SIZES.items():
-        turret_gun(name, size).save(f"{ROOT}/blocks/{name}.png")
+    for name in TURRET_CANVAS:
+        bp_turret(name).save(f"{ROOT}/blocks/{name}.png")
         count += 1
     for name in WALLS:
         wall_sprite(name).save(f"{ROOT}/blocks/{name}.png")
@@ -580,12 +647,12 @@ def main():
         unit_base(name).save(f"{ROOT}/units/{name}-base.png")
         count += 2
         if u["legs"]:
-            unit_leg(u["size"]).save(f"{ROOT}/units/{name}-leg.png")
+            unit_leg().save(f"{ROOT}/units/{name}-leg.png")
             count += 1
     ores = ["bauxite", "hematite", "chalcopyrite", "cassiterite", "galena",
             "uraninite", "quartz", "graphite", "limestone", "beryl"]
     colors = {"bauxite": "d4a373", "hematite": "9c5630", "chalcopyrite": "daa520",
-              "cassiterite": "b8b8bc", "galena": "708090", "uraninite": "50c878",
+              "cassiterite": "b0b0b6", "galena": "708090", "uraninite": "50c878",
               "quartz": "e8e4d8", "graphite": "606060", "limestone": "d8cba8",
               "beryl": "7cc87c"}
     for ore in ores:
@@ -594,6 +661,12 @@ def main():
                 f"{ROOT}/blocks/ore-{ore}{v}.png")
             count += 1
     print(f"generated {count} sprites")
+
+
+def draw_machine_fallback(name, size):
+    w = size * S
+    img, d = plate(w)
+    return img
 
 
 if __name__ == "__main__":
