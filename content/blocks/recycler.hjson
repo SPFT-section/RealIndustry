@@ -10,6 +10,21 @@ consumes: {
     liquid: slag/0.3
     power: 0.0166667
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawBlurSpin
+          suffix: "-rotator"
+          rotateSpeed: 3
+    }
+    ]
+}
+
+
 requirements: [ steel/30, copper/20 ]
 category: crafting
 research: {

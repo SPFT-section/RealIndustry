@@ -2,7 +2,7 @@ name: RealIndustry
 displayName: RealIndustry
 author: RealIndustry Team
 description: Mod อุตสาหกรรมจำลองที่อิงจากตารางธาตุและเคมีในโลกจริง — เหมืองแร่จริง, ถลุง, อิเล็กโทรไลซิส และจัดการของเสีย / An industry mod based on real-world chemistry with waste management.
-version: 1.4.0
+version: 1.5.0
 minGameVersion: 146
 hidden: false
 dependencies: []

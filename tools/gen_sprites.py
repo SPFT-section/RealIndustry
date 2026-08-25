@@ -583,6 +583,98 @@ def unit_leg():
     return img
 
 
+
+
+def glow_region(kind, w):
+    img = img_new(w, w)
+    d = ImageDraw.Draw(img)
+    c = (235, 238, 240, 255)
+    cx = w / 2
+    if kind == "arch":
+        aw = w * 0.34
+        x0, y0 = cx - aw / 2, w * 0.42
+        rect(d, [x0, y0, x0 + aw, y0 + w * 0.22], c, r=int(aw / 4))
+        rect(d, [cx - aw * 0.12, y0 + w * 0.06, cx + aw * 0.12, y0 + w * 0.2],
+             (255, 255, 255, 255))
+    elif kind == "circle":
+        r = w * 0.16
+        ell(d, [cx - r, cx - r, cx + r, cx + r], c)
+    elif kind == "bars":
+        for fx in (0.3, 0.5, 0.7):
+            px = w * fx
+            rect(d, [px - 2, w * 0.28, px + 2, w * 0.72], c)
+    elif kind == "box":
+        rect(d, [w * 0.3, w * 0.44, w * 0.7, w * 0.54], c, r=2)
+    elif kind == "slat":
+        rect(d, [w * 0.3, w * 0.46, w * 0.7, w * 0.54], c)
+    elif kind == "column":
+        rect(d, [w * 0.43, w * 0.28, w * 0.53, w * 0.72], c)
+    return img
+
+
+def liquid_region(kind, w):
+    img = img_new(w, w)
+    d = ImageDraw.Draw(img)
+    c = (235, 238, 240, 255)
+    if kind == "tank":
+        d.ellipse([w * 0.22, w * 0.3, w * 0.52, w * 0.58], fill=c)
+    elif kind == "circle":
+        r = w * 0.2
+        d.ellipse([w / 2 - r, w / 2 - r, w / 2 + r, w / 2 + r], fill=c)
+    return img
+
+
+def centrifuge_rotator(size):
+    w = size * S
+    img = img_new(w, w)
+    d = ImageDraw.Draw(img)
+    cx = w / 2
+    r = w * 0.26
+    for i in range(3):
+        a = i * 2 * math.pi / 3
+        pts = [(cx + math.cos(a) * r, cx + math.sin(a) * r),
+               (cx + math.cos(a + 2.3) * r * 0.4, cx + math.sin(a + 2.3) * r * 0.4),
+               (cx + math.cos(a - 2.3) * r * 0.4, cx + math.sin(a - 2.3) * r * 0.4)]
+        poly(d, pts, MET_L, line=MET_D, lw=1)
+    ell(d, [cx - r * 0.3, cx - r * 0.3, cx + r * 0.3, cx + r * 0.3], MET_M,
+        line=MET_D)
+    return img
+
+
+def recycler_rotator(size):
+    w = size * S
+    img = img_new(w, w)
+    d = ImageDraw.Draw(img)
+    cx = w / 2
+    r = w * 0.24
+    for start in (210, 330, 90):
+        pts = [(cx + math.cos(math.radians(start + t)) * r,
+                cx + math.sin(math.radians(start + t)) * r) for t in range(0, 61, 12)]
+        d.line(pts, fill=MET_L, width=3)
+        ex, ey = pts[-1]
+        a = math.atan2(ey - pts[-2][1], ex - pts[-2][0])
+        d.polygon([(ex + math.cos(a) * 5, ey + math.sin(a) * 5),
+                   (ex + math.cos(a + 2.5) * 5, ey + math.sin(a + 2.5) * 5),
+                   (ex + math.cos(a - 2.5) * 5, ey + math.sin(a - 2.5) * 5)],
+                  fill=MET_L)
+    return img
+
+
+def refinery_rotator(size):
+    w = size * S
+    img = img_new(w, w)
+    d = ImageDraw.Draw(img)
+    cx = w / 2
+    r = w * 0.2
+    for i in range(4):
+        a = i * math.pi / 2
+        d.line([cx, cx, cx + math.cos(a) * r, cx + math.sin(a) * r],
+               fill=MET_L, width=3)
+    ell(d, [cx - r * 0.25, cx - r * 0.25, cx + r * 0.25, cx + r * 0.25], MET_M,
+        line=MET_D)
+    return img
+
+
 def main():
     count = 0
     for name, (kind, hexs) in ITEMS.items():
@@ -660,6 +752,24 @@ def main():
             ore_tile(hash((ore, v)) & 0xFFFF, colors[ore]).save(
                 f"{ROOT}/blocks/ore-{ore}{v}.png")
             count += 1
+    glow_parts = {
+        "copper-smelter": "arch", "blast-furnace": "arch", "alloy-furnace": "arch",
+        "cement-kiln": "arch", "electrolysis-plant": "bars",
+        "nuclear-reactor": "circle", "coal-generator": "box",
+        "filter-press": "slat", "resource-refinery": "column",
+    }
+    for name, kind in glow_parts.items():
+        glow_region(kind, MACHINE_SIZES[name] * S).save(
+            f"{ROOT}/blocks/{name}-glow.png")
+        count += 1
+    for name, kind in {"acid-plant": "tank", "neutralizer": "circle"}.items():
+        liquid_region(kind, MACHINE_SIZES[name] * S).save(
+            f"{ROOT}/blocks/{name}-liquid.png")
+        count += 1
+    centrifuge_rotator(3).save(f"{ROOT}/blocks/centrifuge-rotator.png")
+    recycler_rotator(2).save(f"{ROOT}/blocks/recycler-rotator.png")
+    refinery_rotator(3).save(f"{ROOT}/blocks/resource-refinery-rotator.png")
+    count += 3
     print(f"generated {count} sprites")
 
 

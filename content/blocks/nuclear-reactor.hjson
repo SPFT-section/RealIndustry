@@ -8,6 +8,30 @@ itemDuration: 7200
 heating: 0
 fuelItem: enriched-uranium
 lightColor: "50c878"
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawGlowRegion
+          color: "b088f0"
+          glowScale: 14
+          glowIntensity: 0.8
+    }
+    {
+        type: DrawSpikes
+          color: "b088f0"
+          amount: 6
+          radius: 12
+          length: 5
+          rotateSpeed: 0.5
+    }
+    ]
+}
+
+
 requirements: [ steel/100, lead/50 ]
 category: power
 research: {

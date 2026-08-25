@@ -10,6 +10,26 @@ consumes: {
     items: [ copper/2, cassiterite/2 ]
     power: 0.0333333
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawFlame
+          flameColor: "e8a05c"
+    }
+    {
+        type: DrawGlowRegion
+          color: "e8a05c"
+          glowScale: 8
+          glowIntensity: 0.5
+    }
+    ]
+}
+
+
 requirements: [ copper/30, steel/15 ]
 category: crafting
 research: {

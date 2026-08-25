@@ -16,7 +16,7 @@ ammoTypes: {
         type: ArtilleryBulletType
         damage: 55
         splashDamage: 42
-        splashRadius: 26
+        splashDamageRadius: 26
         speed: 2.1
         width: 11
         height: 16
@@ -25,6 +25,11 @@ ammoTypes: {
         backColor: "5a636e"
     }
 }
+shootEffect: shootBig
+smokeEffect: shootBigSmoke
+ammoUseEffect: casing2
+shake: 1
+
 requirements: [ steel/60, copper/40 ]
 category: turret
 research: {

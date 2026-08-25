@@ -8,6 +8,22 @@ itemDuration: 240
 consumes: {
     item: coal
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawGlowRegion
+          color: "ffb35c"
+          glowScale: 9
+          glowIntensity: 0.6
+    }
+    ]
+}
+
+
 requirements: [ copper/30, steel/20 ]
 category: power
 research: {

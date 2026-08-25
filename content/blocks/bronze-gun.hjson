@@ -30,6 +30,10 @@ ammoTypes: {
         backColor: "7a4520"
     }
 }
+shootEffect: shootSmall
+smokeEffect: shootSmallSmoke
+ammoUseEffect: casing1
+
 requirements: [ copper/35, bronze/25 ]
 category: turret
 research: {

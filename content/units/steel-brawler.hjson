@@ -20,7 +20,7 @@ weapons: [
         bullet: {
             damage: 26
             splashDamage: 8
-            splashRadius: 12
+            splashDamageRadius: 12
             speed: 3.2
             width: 8
             height: 12

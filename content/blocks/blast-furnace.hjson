@@ -11,6 +11,26 @@ consumes: {
     items: [ hematite/3, coal/2 ]
     power: 0.0333333
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawFlame
+          flameColor: "ff8f3d"
+    }
+    {
+        type: DrawGlowRegion
+          color: "ff8f3d"
+          glowScale: 12
+          glowIntensity: 0.7
+    }
+    ]
+}
+
+
 requirements: [ copper/40, graphite/20 ]
 category: crafting
 research: {

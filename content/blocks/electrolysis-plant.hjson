@@ -11,6 +11,22 @@ consumes: {
     items: [ bauxite/4, graphite/1 ]
     power: 0.1
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawGlowRegion
+          color: "5cd8e8"
+          glowScale: 7
+          glowIntensity: 0.6
+    }
+    ]
+}
+
+
 requirements: [ steel/50, copper/30 ]
 category: crafting
 research: {

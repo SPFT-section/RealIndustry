@@ -11,6 +11,33 @@ consumes: {
     liquids: [ sulfuric-acid/0.25 ]
     power: 0.1
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawBlurSpin
+          suffix: "-rotator"
+          rotateSpeed: 2.5
+    }
+    {
+        type: DrawGlowRegion
+          color: "45e07a"
+          glowScale: 8
+          glowIntensity: 0.55
+    }
+    {
+        type: DrawParticles
+          color: "45e07a"
+          particles: 8
+          particleSize: 2
+    }
+    ]
+}
+
+
 requirements: [ steel/100, aluminum/60, bronze/40 ]
 category: crafting
 research: {

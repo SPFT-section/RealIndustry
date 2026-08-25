@@ -11,6 +11,23 @@ consumes: {
     items: [ quartz/2, coal/1 ]
     power: 0.05
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawParticles
+          color: "8fce4e"
+          particles: 12
+          particleSize: 2
+          particleLife: 50
+    }
+    ]
+}
+
+
 requirements: [ steel/40, copper/20 ]
 category: crafting
 research: {

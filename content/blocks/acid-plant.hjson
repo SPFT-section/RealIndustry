@@ -11,6 +11,22 @@ consumes: {
     liquids: [ water/0.3 ]
     power: 0.05
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawBubbles
+          color: "e8cf52"
+          amount: 10
+          radius: 7
+    }
+    ]
+}
+
+
 requirements: [ steel/40, bronze/25 ]
 category: crafting
 research: {

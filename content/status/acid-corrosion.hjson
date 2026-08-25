@@ -1,0 +1,6 @@
+name: กรดกัดกร่อน
+description: สัมผัสกับกรดอุตสาหกรรม โครงสร้างถูกกัดกร่อนอย่างต่อเนื่อง
+color: "d9c25f"
+damage: 0.12
+effectChance: 0.25
+show: true

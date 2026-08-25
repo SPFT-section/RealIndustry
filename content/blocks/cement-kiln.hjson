@@ -10,6 +10,26 @@ consumes: {
     items: [ limestone/2, coal/1 ]
     power: 0.0333333
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawFlame
+          flameColor: "e8a05c"
+    }
+    {
+        type: DrawGlowRegion
+          color: "e8a05c"
+          glowScale: 9
+          glowIntensity: 0.55
+    }
+    ]
+}
+
+
 requirements: [ steel/40, copper/25 ]
 category: crafting
 research: {

@@ -6,4 +6,4 @@ heatCapacity: 0.6
 viscosity: 0.4
 flammability: 0
 explosiveness: 0
-effect: none
+effect: acid-corrosion

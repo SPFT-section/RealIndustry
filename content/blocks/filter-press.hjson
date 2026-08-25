@@ -10,6 +10,22 @@ consumes: {
     liquid: waste-sludge/0.2
     power: 0.0166667
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawGlowRegion
+          color: "a5d86a"
+          glowScale: 6
+          glowIntensity: 0.45
+    }
+    ]
+}
+
+
 requirements: [ steel/25, copper/15 ]
 category: crafting
 research: {

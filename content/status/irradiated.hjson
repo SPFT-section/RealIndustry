@@ -1,0 +1,8 @@
+name: ได้รับรังสี
+description: สัมผัสกัมมันตรังสีจากยูเรเนียม อ่อนแรงและเสียหายต่อเนื่อง
+color: "45e07a"
+damage: 0.2
+healthMultiplier: 0.85
+speedMultiplier: 0.8
+effectChance: 0.2
+show: true

@@ -15,13 +15,15 @@ ammoTypes: {
     enriched-uranium: {
         type: RailBulletType
         damage: 125
-        width: 9
         length: 340
         pierceCap: 3
-        frontColor: "45e07a"
-        backColor: "1a5c38"
     }
 }
+shootEffect: railShoot
+smokeEffect: shootBigSmoke2
+ammoUseEffect: casing4
+shake: 2
+
 requirements: [ steel/120, aluminum/80, lead/60 ]
 category: turret
 research: {

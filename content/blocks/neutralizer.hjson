@@ -12,6 +12,22 @@ consumes: {
     liquid: spent-acid/0.35
     power: 0.0083333
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawBubbles
+          color: "8fc6f0"
+          amount: 8
+          radius: 6
+    }
+    ]
+}
+
+
 requirements: [ steel/20, copper/10 ]
 category: crafting
 research: {

@@ -16,7 +16,7 @@ ammoTypes: {
         type: FlakBulletType
         damage: 13
         splashDamage: 11
-        splashRadius: 18
+        splashDamageRadius: 18
         speed: 4.2
         width: 6
         height: 9
@@ -25,6 +25,10 @@ ammoTypes: {
         backColor: "7d8a94"
     }
 }
+shootEffect: shootSmall
+smokeEffect: shootSmokeSquare
+ammoUseEffect: casing3
+
 requirements: [ aluminum/70, steel/30 ]
 category: turret
 research: {

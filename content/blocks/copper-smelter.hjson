@@ -11,6 +11,26 @@ consumes: {
     items: [ chalcopyrite/2 ]
     power: 0.025
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawFlame
+          flameColor: "ff8f3d"
+    }
+    {
+        type: DrawGlowRegion
+          color: "ff8f3d"
+          glowScale: 8
+          glowIntensity: 0.5
+    }
+    ]
+}
+
+
 requirements: [ copper/25 ]
 category: crafting
 research: {

@@ -10,6 +10,27 @@ consumes: {
     items: [ uraninite/5 ]
     power: 0.0666667
 }
+drawer: {
+    type: DrawMulti
+    drawers: [
+    {
+        type: DrawDefault
+    }
+    {
+        type: DrawBlurSpin
+          suffix: "-rotator"
+          rotateSpeed: 2
+    }
+    {
+        type: DrawCircles
+          color: "50c878"
+          amount: 3
+          radius: 10
+    }
+    ]
+}
+
+
 requirements: [ steel/60, titanium/20 ]
 category: crafting
 research: {
